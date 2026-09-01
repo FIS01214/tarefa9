@@ -1,0 +1,159 @@
+# Parte 2 — Reconstrução, normalização e interpretação estatística
+
+Esta etapa utiliza a seleção e o cutflow definidos na Parte 1. Não modifique os
+cortes depois de observar os resultados normalizados sem registrar e justificar
+essa decisão.
+
+## [5] Consistência do quadrimomento e variável de Mandelstam
+
+Para os eventos de índices `1 + 1000*i`, com `i = 0, ..., 9`:
+
+1. Some os quadrimomentos das partículas iniciais (`status = -1`) e calcule
+   `s_hat = (p1 + p2)^2`.
+2. Some todas as partículas finais (`status = 1`), incluindo partículas
+   invisíveis, e compare o resultado com `s_hat` dentro da precisão numérica.
+3. Some apenas as partículas finais visíveis e calcule `m_visivel^2`.
+4. Se houver neutrinos ou outras partículas invisíveis, explique por que
+   `m_visivel^2` não deve ser chamado de `s_hat`.
+5. Quantifique resíduos de conservação de energia e momento, em vez de apenas
+   afirmar que há conservação.
+
+Use unidades de GeV para energia e momento e GeV² para os invariantes ao
+quadrado.
+
+---
+
+## [6] Reconstrução de massas invariantes
+
+Construa distribuições de massa invariante para pares fisicamente relevantes,
+por exemplo:
+
+- pares de léptons de mesma espécie e cargas opostas;
+- pares de partons ou jatos associados ao mesmo candidato;
+- pares de fótons;
+- combinações completas das partículas finais visíveis.
+
+Quando houver mais de uma combinação possível:
+
+1. declare o critério de pareamento;
+2. informe quantas combinações são produzidas por evento;
+3. diferencie o número de entradas do número de eventos;
+4. verifique se o pareamento introduz viés.
+
+Produza também histogramas bidimensionais relevantes, como massa invariante
+versus `pT`, `eta` ou `Delta R` do sistema reconstruído, para sinal e fundo
+separadamente. Defina claramente se `eta` pertence a uma partícula ou ao
+quadrimomento combinado do candidato.
+
+---
+
+## [7] Pesos, seção de choque e luminosidade
+
+Extraia e registre:
+
+- número de eventos gerados;
+- convenção `event_norm` do run card;
+- pesos `XWGTUP`;
+- seção de choque e sua unidade;
+- luminosidade integrada adotada.
+
+Pode-se usar como referência:
+
+```text
+L = 10/fb = 10000/pb
+```
+
+Para uma amostra não ponderada com eventos equivalentes, o peso físico básico é
+
+```text
+w = sigma * L / N_gerado
+```
+
+Não aplique essa expressão automaticamente quando os pesos LHE já carregarem
+uma normalização. Primeiro interprete `event_norm`, verifique a soma dos pesos e
+demonstre que a convenção utilizada reproduz o yield total esperado.
+
+Para cada bin, calcule:
+
+- yield: `sum(w)`;
+- incerteza estatística: `sqrt(sum(w**2))`.
+
+Normalize `pT`, `eta`, `phi`, massas invariantes e o cutflow. Apresente também a
+eficiência e a aceitação de cada etapa da seleção.
+
+---
+
+## [8] Visualização e comparação estatística
+
+1. Construa histogramas empilhados do fundo e do sinal esperado.
+2. Mostre barras ou bandas de incerteza estatística.
+3. Não chame a soma das simulações de "dados experimentais". Se nenhum conjunto
+   de dados for fornecido, identifique o resultado como expectativa de Monte
+   Carlo ou pseudo-dados.
+4. Quando apropriado, produza uma razão entre distribuições em painel separado.
+5. Para regiões de seleção bem definidas, calcule:
+   - `S/B`;
+   - `S/sqrt(B)`, quando `B > 0`;
+   - opcionalmente, uma significância Asimov e o efeito de uma incerteza
+     sistemática simples no fundo.
+
+Explique que `S/sqrt(B)` é apenas uma aproximação e não substitui um tratamento
+estatístico completo, especialmente para baixas contagens ou grandes
+incertezas sistemáticas.
+
+---
+
+## [9] Discussão final
+
+Responda com base em resultados quantitativos:
+
+- A proporção entre sinal e fundo faz sentido após a normalização?
+- Quais estruturas aparecem nas massas invariantes e a quais partículas podem
+  estar associadas?
+- Qual etapa do cutflow mais melhora `S/B` e qual é seu custo em sinal?
+- As conclusões permanecem quando as incertezas estatísticas são consideradas?
+- Quais efeitos de hadronização, reconstrução, identificação e detector estão
+  ausentes?
+- Qual seria o próximo passo para aproximar o estudo de uma análise real do
+  CMS ou ATLAS?
+
+---
+
+## [10] Estimativa simplificada da seção de choque
+
+Como checagem final, estime a seção de choque a partir do número de eventos
+esperado após a seleção:
+
+```text
+sigma_estimado = N / (A * epsilon * L)
+```
+
+Nesta atividade, use a aproximação em nível de gerador:
+
+```text
+A * epsilon = N_pass / N_gerado
+```
+
+onde:
+
+- `N_pass` é o número de eventos de Monte Carlo que passam a seleção final;
+- `N_gerado` é o número total de eventos gerados;
+- `L` é a luminosidade integrada;
+- `N` é o yield esperado após a seleção.
+
+Para uma amostra simulada, uma escolha simples é:
+
+```text
+N = sigma_LHE * L * (A * epsilon)
+```
+
+Ao substituir esse `N` na expressão de `sigma_estimado`, o resultado deve
+recuperar aproximadamente a seção de choque registrada no LHE. Use essa etapa
+como teste de consistência da normalização.
+
+Depois, discuta por que uma medida experimental real exigiria:
+
+- subtração de fundo, por exemplo `N_sinal = N_obs - N_fundo`;
+- eficiência de trigger, reconstrução e identificação;
+- correções de detector e unfolding;
+- incertezas estatísticas e sistemáticas.

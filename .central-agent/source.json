@@ -1,0 +1,5 @@
+{
+  "central_agent_repo": "diemort/central-agent",
+  "central_agent_ref": "main",
+  "central_agent_sha": "local-working-tree"
+}
