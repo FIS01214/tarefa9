@@ -1,0 +1,169 @@
+# Parte 1 — Análise exploratória de eventos simulados em formato LHE
+
+## [0] Contexto físico e limitações da amostra
+
+Antes de iniciar a análise, registre no notebook:
+
+- o processo de sinal e o processo de fundo presentes nos cartões do MadGraph;
+- o estado final esperado e as partículas intermediárias relevantes;
+- quais objetos seriam reconstruídos em um detector do LHC;
+- o nível de simulação disponível.
+
+Importante: arquivos LHE contêm eventos simulados em nível de gerador. Uma
+partícula com `status = 1` é final no registro LHE, mas não é necessariamente um
+objeto diretamente detectável. Em particular, quarks e glúons são partons; sem
+hadronização e simulação do detector, eles não devem ser chamados de jatos
+reconstruídos. Quando necessário, use o termo "parton b" ou "aproximação de
+jato b em nível de gerador".
+
+---
+
+## [1] Leitura dos arquivos LHE
+
+Implemente a leitura das amostras de sinal e fundo utilizando uma das formas:
+
+- biblioteca especializada (`pylhe`, `scikit-hep`, etc.);
+- conversão para `pandas.DataFrame`;
+- leitura manual com Python (`open`, `gzip`, `split`, expressões regulares etc.).
+
+Exigências por tamanho do grupo:
+
+- Individual: entregar uma forma de leitura.
+- Dupla: entregar duas formas em dois notebooks.
+- Trio: entregar três formas em três notebooks.
+
+O método deve ler, no mínimo, o cabeçalho do evento e os campos PDG ID,
+`status`, `px`, `py`, `pz`, energia, massa e peso do evento (`XWGTUP`).
+
+---
+
+## [2a] Validação e investigação preliminar dos arquivos
+
+Para cada amostra:
+
+1. Exiba o número total de eventos lidos.
+2. Verifique a distribuição do número de partículas por evento (`NUP`).
+3. Resuma os pesos dos eventos: mínimo, máximo, média, quantidade de pesos
+   negativos, nulos ou não finitos.
+4. Identifique e conte os canais partônicos iniciais por meio das partículas
+   com `status = -1`.
+5. Confirme a frequência do estado final esperado e sinalize eventos com
+   topologia inesperada ou campos inválidos.
+
+Exemplo:
+
+```python
+print(f"Número total de eventos: {len(events)}")
+```
+
+---
+
+## [2b] Inventário das partículas e identificação dos processos
+
+Construa uma tabela das partículas presentes, separadas por PDG ID e `status`:
+
+- `status = -1`: partículas iniciais;
+- `status = 1`: partículas finais no registro do gerador;
+- `status = 2`: partículas intermediárias cuja história foi preservada.
+
+A tabela deve apresentar:
+
+- número total de ocorrências;
+- número e fração de eventos em que a partícula aparece;
+- papel físico da partícula no processo.
+
+Com base no cartão do MadGraph e no conteúdo dos eventos, identifique e explique:
+
+- o processo de sinal;
+- o processo de fundo;
+- por que ambos podem produzir o mesmo estado final observável.
+
+---
+
+## [3] Exploração cinemática dos objetos finais
+
+Selecione as partículas com `status = 1` e exclua neutrinos. Para cada espécie
+de partícula final visível, construa histogramas comparando sinal e fundo:
+
+- momento transversal: `pT` de 0 a 100 GeV;
+- pseudorapidez: `eta` de -3 a +3;
+- ângulo azimutal: `phi` de -pi a +pi.
+
+Para cada histograma, informe separadamente:
+
+- número de entradas;
+- número e fração de eventos representados;
+- número de entradas abaixo do intervalo (underflow);
+- número de entradas acima do intervalo (overflow);
+- incerteza estatística por bin, usando `sqrt(N)` para contagens não ponderadas
+  ou `sqrt(sum(w**2))` para contagens ponderadas.
+
+Também construa variáveis em nível de evento:
+
+- `pT` dos objetos líderes e sublíderes de cada tipo;
+- multiplicidade de objetos finais;
+- maior `|eta|` e menor `pT` entre os objetos selecionados;
+- `Delta eta`, `Delta phi` e `Delta R` entre pares fisicamente relevantes.
+
+Responda:
+
+1. Todos os histogramas representam todos os eventos do LHE?
+2. Quando o número de entradas difere do número de eventos?
+3. Quais diferenças de forma entre sinal e fundo podem ser relacionadas à
+   origem física dos objetos?
+
+Observação: nesta parte, compare formas, contagens e eficiências. A normalização
+por seção de choque e luminosidade pertence à Parte 2.
+
+---
+
+## [4] Seleção cinemática e cutflow
+
+### [4a] Definição dos cortes
+
+Proponha cortes coerentes com os diferentes tipos de objeto. Evite aplicar
+automaticamente o mesmo limiar a todas as partículas. Por exemplo:
+
+- múons: limiar de `pT` e aceitação em `|eta|` compatíveis com a região central;
+- partons b, usados como aproximação em nível de gerador: limiar próprio de
+  `pT` e aceitação em `|eta|`;
+- separação angular mínima `Delta R`, quando fisicamente apropriada.
+
+Explique a motivação de cada corte e deixe claro que uma seleção em nível de
+gerador não substitui uma análise com hadronização, reconstrução de jatos,
+identificação de b e resposta do detector.
+
+### [4b] Tabela de fluxo de seleção
+
+Aplique os cortes sequencialmente e construa uma tabela de cutflow contendo:
+
+- nome da etapa;
+- eventos de sinal e fundo restantes;
+- eficiência incremental de cada etapa;
+- eficiência acumulada em relação à amostra inicial;
+- razão entre as eficiências acumuladas do sinal e do fundo.
+
+### [4c] Histogramas após a seleção
+
+Reconstrua os histogramas das variáveis mais informativas após o corte final e
+compare-os com as distribuições anteriores. Discuta:
+
+- quanto sinal foi perdido;
+- quanto fundo foi rejeitado;
+- qual corte produziu a maior separação;
+- se a escolha parece excessivamente agressiva ou introduz algum viés.
+
+Não chame a razão de eficiências de significância. O cálculo de `S/B` ou
+`S/sqrt(B)` requer a normalização física das amostras e será tratado depois.
+
+---
+
+## [5] Conclusões da Parte 1
+
+Finalize o notebook respondendo, com base nos resultados:
+
+- qual variável foi mais útil para distinguir sinal e fundo;
+- qual etapa do cutflow rejeitou mais fundo;
+- qual foi o custo em eficiência do sinal;
+- quais limitações decorrem do uso de eventos em nível partônico;
+- o que mudaria após hadronização e simulação do detector.

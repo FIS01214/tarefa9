@@ -1,0 +1,60 @@
+# Projeto Final — Análise de Processos em Física de Partículas
+
+## Objetivo
+
+Cada grupo deve estudar um processo físico de sinal e um processo de fundo a
+partir de eventos simulados em formato LHE. A análise deve combinar código
+reproduzível, visualizações e interpretação física.
+
+## Organização do grupo
+
+Cada estudante deve implementar uma abordagem de leitura diferente:
+
+1. biblioteca especializada (`pylhe`, componentes do Scikit-HEP etc.);
+2. conversão dos eventos para `pandas.DataFrame`;
+3. leitura manual com Python (`open`, `gzip`, `split`, expressões regulares etc.).
+
+- Trabalho individual: uma abordagem.
+- Dupla: duas abordagens em dois notebooks.
+- Trio: três abordagens em três notebooks.
+
+Ao final, o grupo deve consolidar os resultados em `analise_parte1.ipynb`,
+comparando as abordagens e selecionando a implementação mais clara para as
+etapas seguintes.
+
+## Natureza das amostras
+
+Os eventos são simulações em nível de gerador, não dados experimentais. Uma
+partícula com `status = 1` é final no registro LHE, mas isso não garante que ela
+seja diretamente detectável. Quarks e glúons são partons; sem hadronização e
+simulação do detector, eles não são jatos reconstruídos.
+
+## Estrutura do trabalho
+
+- Arquivos LHE: `data/`.
+- Notebooks: `notebooks/`.
+- Figuras: `resultados/graficos/`.
+- Instruções da primeira etapa: `parte1.txt`.
+- Instruções da segunda etapa: `parte2.txt`.
+
+Use caminhos relativos. Cada notebook deve explicar em células Markdown o que
+será calculado, apresentar o código e discutir os resultados obtidos.
+
+## Entregas
+
+1. Parte 1: notebooks individuais e análise consolidada.
+2. Parte 2: reconstrução, normalização e interpretação estatística.
+
+As datas, nomes de branches e regras de Pull Request devem seguir a página da
+turma no Moodle.
+
+## Critérios de avaliação
+
+- clareza e organização do repositório;
+- correção da leitura e validação das amostras;
+- compreensão do nível de simulação e dos conceitos físicos;
+- distinção entre objetos, eventos, pesos e yields;
+- qualidade e legibilidade das visualizações;
+- justificativa dos cortes e interpretação do cutflow;
+- profundidade da análise e reconhecimento de suas limitações;
+- participação equilibrada dos integrantes.

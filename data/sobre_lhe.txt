@@ -1,0 +1,83 @@
+# Formato LHE (Les Houches Event)
+
+O formato LHE é um padrão para registrar eventos simulados e permitir a troca
+de informações entre geradores de elementos de matriz, programas de
+hadronização e outras etapas de uma cadeia de Monte Carlo.
+
+Referência original:
+
+@article{Alwall:2006yp,
+    author = "Alwall, J. and others",
+    title = "{A Standard format for Les Houches event files}",
+    eprint = "hep-ph/0609017",
+    archivePrefix = "arXiv",
+    reportNumber = "FERMILAB-PUB-06-337-T, CERN-LCGAPP-2006-03",
+    doi = "10.1016/j.cpc.2006.11.010",
+    journal = "Comput. Phys. Commun.",
+    volume = "176",
+    pages = "300--304",
+    year = "2007"
+}
+
+## O que representa um arquivo LHE?
+
+Um arquivo `.lhe` contém eventos de Monte Carlo em nível de gerador. Em geral,
+ele descreve partículas antes da hadronização e da simulação do detector. O
+arquivo usa marcação semelhante a XML, com blocos de texto numéricos cujo
+significado é definido pelo padrão LHE.
+
+Um arquivo `.lhe.gz` contém o mesmo conteúdo comprimido com gzip e pode ser
+lido diretamente em Python com `gzip.open`.
+
+## Estrutura principal
+
+- `<header>`: modelo, cartões, versões, parâmetros e metadados do gerador.
+- `<init>`: feixes, energias, PDFs, convenções de peso e subprocessos.
+- `<event>`: cabeçalho e lista de partículas de um evento.
+
+O cabeçalho de cada evento contém, entre outros campos:
+
+- `NUP`: número de linhas de partículas;
+- `IDPRUP`: identificador do subprocesso;
+- `XWGTUP`: peso do evento;
+- `SCALUP`: escala do evento;
+- `AQEDUP` e `AQCDUP`: valores dos acoplamentos.
+
+Cada linha de partícula registra:
+
+1. PDG ID;
+2. `status`;
+3. índices das partículas-mãe;
+4. informação de cor;
+5. `px`, `py`, `pz` e energia;
+6. massa;
+7. tempo de vida e spin.
+
+## Interpretação de status
+
+Para as amostras desta atividade:
+
+- `status = -1`: partícula inicial;
+- `status = 1`: partícula final no registro do gerador;
+- `status = 2`: partícula intermediária cuja história foi preservada.
+
+`status = 1` não significa automaticamente "detectável". Neutrinos são
+invisíveis e quarks ou glúons são partons que ainda precisam de hadronização e
+reconstrução para originar jatos.
+
+## Pesos e normalização
+
+O significado numérico de `XWGTUP` depende da configuração do gerador,
+incluindo `event_norm`. Antes de construir yields:
+
+1. leia o run card e o bloco `<init>`;
+2. verifique pesos negativos, nulos ou não finitos;
+3. compare a soma dos pesos com a seção de choque registrada;
+4. documente a convenção usada na normalização.
+
+## Limitações para uma análise do LHC
+
+Um LHE isolado normalmente não inclui hadronização, pileup, trigger, resolução
+do detector, reconstrução de léptons e jatos ou identificação de sabor. Os
+resultados devem ser descritos como análise em nível partônico ou de gerador,
+salvo quando etapas adicionais tiverem sido aplicadas.
