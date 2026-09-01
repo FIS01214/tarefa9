@@ -19,6 +19,17 @@ Este repositorio contem uma tarefa individualizada da disciplina FIS01214 para a
 - parte1.txt
 - parte2.txt
 
+## Uso no Google Colab
+
+Se você baixar este repositório pelo GitHub como arquivo `.zip`, faça o upload
+desse `.zip` no Google Colab. Antes de começar a análise, peça ao agente que
+gere o código para descompactar o arquivo no ambiente do Colab, entrar na
+pasta extraída e confirmar que `data/sinal.lhe.gz` e `data/fundo.lhe.gz`
+existem.
+
+Depois disso, execute o notebook escolhido usando caminhos relativos à raiz
+do repositório descompactado.
+
 ## Como usar
 
 1. Leia instrucoes.txt, parte1.txt e parte2.txt.
